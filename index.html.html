@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6d4fb3">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Untuk Hana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,500&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#f6f0ff; --bg2:#e7dafb; --bg3:#d3bff2;
+    --ink:#34244f; --ink-soft:#5c4a7d;
+    --violet:#7a58c4; --violet-deep:#5a3ea0; --lilac:#b79af0;
+    --paper:rgba(255,255,255,.72);
+    --line:rgba(122,88,196,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Nunito',system-ui,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(165deg,var(--bg1) 0%,var(--bg2) 55%,var(--bg3) 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  body.locked{overflow:hidden;height:100vh}
+
+  /* ---------- decorative background ---------- */
+  .bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;animation:drift 22s ease-in-out infinite alternate}
+  .b1{width:46vmax;height:46vmax;background:#cdb4ff;top:-14vmax;left:-12vmax}
+  .b2{width:38vmax;height:38vmax;background:#f0c6f5;bottom:-12vmax;right:-10vmax;animation-delay:-7s}
+  .b3{width:28vmax;height:28vmax;background:#b8c4ff;top:38%;left:55%;opacity:.4;animation-delay:-13s}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(4vmax,3vmax) scale(1.12)}}
+  .float{position:absolute;color:var(--lilac);opacity:.0;animation:rise linear infinite;user-select:none}
+  @keyframes rise{
+    0%{transform:translateY(8vh) rotate(0deg);opacity:0}
+    12%{opacity:.7}
+    85%{opacity:.5}
+    100%{transform:translateY(-112vh) rotate(200deg);opacity:0}
+  }
+  .waves{position:fixed;left:0;right:0;bottom:0;height:140px;z-index:0;pointer-events:none;opacity:.5}
+  .waves svg{width:100%;height:100%;display:block}
+
+  /* ---------- progress ---------- */
+  #progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--lilac),var(--violet));z-index:50;border-radius:0 3px 3px 0}
+
+  /* ---------- intro / envelope ---------- */
+  #intro{
+    position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+    background:linear-gradient(165deg,#f6f0ff,#e2d3fa 60%,#cfb8f1);
+    transition:opacity 1s ease,visibility 1s ease;
+    padding:24px;text-align:center;
+  }
+  #intro.gone{opacity:0;visibility:hidden}
+  .eyebrow{font-size:.8rem;letter-spacing:.32em;text-transform:uppercase;color:var(--violet-deep);opacity:.8}
+  .intro-title{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.7rem,6vw,2.4rem);color:var(--ink)}
+  .intro-title em{color:var(--violet)}
+  .envelope{
+    position:relative;width:min(78vw,300px);aspect-ratio:1.45;cursor:pointer;
+    animation:bob 3.6s ease-in-out infinite;border:none;background:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .env-back,.env-front,.env-flap,.env-letter{position:absolute;left:0;right:0}
+  .env-back{inset:0;background:#c9b0f2;border-radius:10px;box-shadow:0 18px 40px rgba(90,62,160,.28)}
+  .env-letter{
+    left:8%;right:8%;top:10%;height:70%;background:#fff;border-radius:6px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);transition:transform .9s .35s cubic-bezier(.3,.8,.3,1);
+    display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-style:italic;color:var(--violet);font-size:1.05rem
+  }
+  .env-front{
+    inset:0;border-radius:10px;
+    background:
+      linear-gradient(to top right,transparent 49.5%,#b794ee 50%) left/50% 100% no-repeat,
+      linear-gradient(to top left,transparent 49.5%,#b794ee 50%) right/50% 100% no-repeat,
+      linear-gradient(#d4bdf7,#d4bdf7) bottom/100% 55% no-repeat;
+    clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%);
+    background:linear-gradient(135deg,#d8c3f9,#c3a6ee);
+  }
+  .env-flap{
+    top:0;height:55%;background:linear-gradient(180deg,#b996ef,#a47fe3);
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top;transition:transform .7s ease;
+    border-radius:10px 10px 0 0;
+  }
+  .seal{
+    position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:3;
+    width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9a74e0,#6d4fb3);
+    color:#fff;display:grid;place-items:center;font-family:'Fraunces',serif;font-size:1.2rem;
+    box-shadow:0 4px 10px rgba(60,30,120,.4);transition:opacity .3s;
+  }
+  .envelope.open .env-flap{transform:rotateX(180deg)}
+  .envelope.open .env-letter{transform:translateY(-42%)}
+  .envelope.open .seal{opacity:0}
+  .hint{font-size:.9rem;color:var(--ink-soft);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+
+  /* ---------- letter ---------- */
+  main{position:relative;z-index:2;max-width:720px;margin:0 auto;padding:clamp(28px,6vw,64px) 18px 140px}
+  .letter{
+    background:var(--paper);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.7);
+    border-radius:28px;
+    box-shadow:0 30px 70px rgba(90,62,160,.18),0 2px 0 rgba(255,255,255,.8) inset;
+    padding:clamp(28px,6vw,60px) clamp(22px,6vw,56px);
+    opacity:0;transform:translateY(24px);transition:opacity 1.2s .4s ease,transform 1.2s .4s ease;
+  }
+  body.opened .letter{opacity:1;transform:none}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--violet-deep);background:rgba(183,154,240,.22);padding:8px 14px;border-radius:99px;margin-bottom:22px
+  }
+  .badge i{width:8px;height:8px;border-radius:50%;background:var(--violet);display:inline-block}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.9rem,6.5vw,2.8rem);line-height:1.2;color:var(--ink);margin-bottom:10px}
+  h1 em{color:var(--violet);font-style:italic}
+  .divider{display:flex;align-items:center;gap:12px;margin:22px 0 34px;color:var(--lilac)}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+
+  #body p{
+    font-size:clamp(1.02rem,3.6vw,1.14rem);line-height:1.95;color:var(--ink);
+    margin-bottom:1.15em;
+    opacity:0;transform:translateY(14px);transition:opacity .9s ease,transform .9s ease;
+  }
+  #body p.in{opacity:1;transform:none}
+  #body p.hl{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:500;
+    font-size:clamp(1.2rem,4.4vw,1.5rem);line-height:1.55;color:var(--violet-deep);
+    margin:1.6em 0;padding:18px 20px 18px 22px;
+    border-left:4px solid var(--lilac);
+    background:linear-gradient(90deg,rgba(183,154,240,.2),rgba(183,154,240,0));
+    border-radius:0 14px 14px 0;
+  }
+  #body p.sign{
+    font-family:'Fraunces',serif;font-style:italic;font-size:1.5rem;color:var(--violet-deep);text-align:right;margin-top:2.2em
+  }
+
+  /* ---------- support card ---------- */
+  .support{
+    margin-top:44px;padding:26px 24px;border-radius:22px;
+    background:linear-gradient(135deg,rgba(122,88,196,.12),rgba(183,154,240,.2));
+    border:1px solid var(--line);
+  }
+  .support h2{font-family:'Fraunces',serif;font-weight:500;font-size:1.3rem;color:var(--violet-deep);margin-bottom:8px}
+  .support p{font-size:.98rem;line-height:1.7;color:var(--ink-soft);margin-bottom:14px}
+  .lines{display:grid;gap:10px}
+  .line{display:flex;justify-content:space-between;align-items:center;gap:12px;
+    background:rgba(255,255,255,.75);border-radius:14px;padding:12px 16px;text-decoration:none;color:var(--ink);font-weight:600}
+  .line span{font-weight:500;color:var(--ink-soft);font-size:.88rem}
+  .line b{color:var(--violet-deep);font-size:1.05rem}
+  .foot{text-align:center;margin-top:34px;font-size:.85rem;color:var(--ink-soft);opacity:.8}
+
+  /* ---------- music button ---------- */
+  #music{
+    position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:45;
+    width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.7);cursor:pointer;
+    background:rgba(255,255,255,.75);backdrop-filter:blur(10px);color:var(--violet-deep);font-size:1.2rem;
+    box-shadow:0 8px 20px rgba(90,62,160,.25);display:grid;place-items:center;
+  }
+  #music.playing{animation:spin 6s linear infinite}
+  #music.paused{opacity:.6}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #yt-frame-wrap{position:fixed;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;bottom:0;right:0}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition-duration:.01s!important}
+  }
+</style>
+</head>
+<body class="locked">
+
+<!-- MUSIC: background song, muted-autoplay (browser policy) + loop, same method as the Aufa letter -->
+<div id="yt-frame-wrap">
+  <iframe id="yt-player"
+    src="https://www.youtube.com/embed/7lrj5eSaf4g?autoplay=1&mute=1&loop=1&playlist=7lrj5eSaf4g&controls=0&enablejsapi=1"
+    allow="autoplay; encrypted-media" frameborder="0"></iframe>
+</div>
+
+<div class="bg" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div id="floaters"></div>
+</div>
+<div class="waves" aria-hidden="true">
+  <svg viewBox="0 0 1440 140" preserveAspectRatio="none">
+    <path d="M0,70 C240,130 480,10 720,60 C960,110 1200,20 1440,70 L1440,140 L0,140Z" fill="rgba(183,154,240,.35)"/>
+    <path d="M0,100 C300,50 540,140 820,90 C1100,40 1250,110 1440,90 L1440,140 L0,140Z" fill="rgba(122,88,196,.22)"/>
+  </svg>
+</div>
+<div id="progress"></div>
+
+<section id="intro">
+  <div class="eyebrow">Ada sesuatu untuk kamu</div>
+  <button class="envelope" id="env" aria-label="Buka surat">
+    <div class="env-back"></div>
+    <div class="env-letter">Hana ♡</div>
+    <div class="env-front"></div>
+    <div class="env-flap"></div>
+    <div class="seal">H</div>
+  </button>
+  <div class="intro-title">sepucuk surat untuk <em>Hana</em></div>
+  <div class="hint">tekan untuk buka</div>
+</section>
+
+<main>
+  <article class="letter">
+    <div class="badge"><i></i> Surat dari seorang kawan</div>
+    <h1>Untuk <em>Hana Halwah</em>,</h1>
+    <div class="divider">✦</div>
+    <div id="body"></div>
+
+    <div class="support">
+      <h2>Kau tak perlu hadapi semuanya seorang diri</h2>
+      <p>Kalau hari ini terasa terlalu berat, ada orang yang sedia mendengar. Hubungi bila-bila masa:</p>
+      <div class="lines">
+        <a class="line" href="tel:15999">Talian Kasih <span>24 jam</span><b>15999</b></a>
+        <a class="line" href="tel:+60376272929">Befrienders KL <span>24 jam</span><b>03-7627 2929</b></a>
+      </div>
+    </div>
+    <p class="foot">dibuat dengan hati ♡</p>
+  </article>
+</main>
+
+<button id="music" aria-label="Lagu" class="paused">🔇</button>
+
+<script>
+/* Lines starting with ">" become highlighted quotes, "^" is the signature. */
+const LETTER = `Aku tak tahu sama ada kau akan terkejut, terdiam, atau mungkin tertanya-tanya kenapa aku tiba-tiba menulis surat sepanjang ni untuk kau. Tapi sebelum kau baca sampai habis, aku cuma nak kau tahu satu benda… Semua yang aku tulis dekat sini datang daripada apa yang aku betul-betul rasa.
+Sebenarnya, aku tak tahu macam mana nak mulakan semua ni. Kita baru kenal, belum lama pun kita berkawan. Tapi entah kenapa, dalam masa yang singkat ni, aku dah mula mengambil berat tentang kau. Mungkin bagi kau, aku cuma seorang kawan yang baru hadir dalam hidup kau. Tapi bagi aku, kau dah menjadi seseorang yang aku harap akan sentiasa berada dalam keadaan baik.
+Aku tak tahu keseluruhan cerita hidup kau. Aku tak tahu semua perkara yang pernah kau lalui, semua masalah yang pernah buat kau menangis, atau semua perkara yang kau simpan dalam hati tanpa sesiapa pun tahu.
+Dan aku tak nak berpura-pura seolah-olah aku faham semuanya.
+Tapi Hana, aku nak kau tahu yang kau tak perlu menceritakan semuanya kepada aku untuk membuatkan aku mengambil berat tentang kau.
+Kadang-kadang, aku terfikir tentang kehidupan kau. Aku tertanya-tanya apa yang sebenarnya kau lalui sampai ada masanya kau kelihatan begitu tertekan. Aku tertanya-tanya sama ada kau betul-betul okay apabila kau kata kau okay, atau sebenarnya ada banyak perkara yang kau pendam sendiri.
+Aku tak tahu jawapan kepada semua persoalan tu. Tapi satu perkara yang aku tahu, aku tak suka melihat kau melakukan perkara yang boleh membahayakan diri kau sendiri.
+Aku risau, Hana.
+Mungkin kau tak nampak betapa aku risau. Mungkin bagi kau, apa yang kau buat tu perkara biasa. Tapi apabila aku tahu kau bawa motor laju-laju, keluar malam seorang diri dan pernah menyakiti diri sendiri, aku tak boleh menganggap semua tu sebagai perkara kecil.
+Bukan sebab aku nak masuk campur dalam semua urusan kau. Bukan sebab aku rasa aku berhak menentukan apa yang kau boleh atau tak boleh buat.
+Tapi sebab aku tahu kau juga seorang manusia yang mempunyai kehidupan, impian, perasaan dan masa depan yang masih panjang.
+Dan aku tak nak kau mengabaikan semua tu hanya kerana ada perkara dalam kehidupan yang sedang membuatkan kau penat.
+Hana, aku tahu aku tak boleh memaksa kau untuk berubah. Aku tak boleh meminta kau melupakan semua masalah kau dalam satu malam. Aku juga tak boleh menjanjikan bahawa selepas membaca surat ni, segala perkara yang menyakitkan kau akan terus hilang.
+Tapi kalau ada satu perkara yang aku betul-betul berharap kau akan faham, perkara tu ialah…
+>Tolong jangan terlalu menyakiti diri sendiri hanya kerana kehidupan sedang menyakiti hati kau.
+Kalau kau penat, berehatlah.
+Kalau kau sedih, menangislah.
+Kalau kau rasa marah, kecewa atau tertekan, carilah cara yang lebih selamat untuk meluahkan semua perasaan tu.
+Dan kalau kau rasa semuanya terlalu berat untuk ditanggung seorang diri, tolong carilah seseorang yang boleh mendengar dan membantu kau.
+Kau tak perlu berpura-pura kuat setiap masa, Hana. Kau tak perlu senyum apabila kau sebenarnya sedang bersedih. Kau tak perlu menyimpan semua masalah dalam hati hanya kerana kau takut orang lain takkan memahami kau.
+Aku harap kau tahu bahawa meminta pertolongan bukan bermaksud kau lemah. Kadang-kadang, mengakui bahawa kita sedang bergelut dengan sesuatu merupakan langkah pertama untuk kita mendapatkan bantuan yang kita perlukan.
+Dan aku harap kau akan memberikan peluang kepada diri sendiri untuk mendapatkan bantuan tu.
+Aku juga nak bercakap tentang satu perkara yang mungkin kedengaran biasa, tetapi sangat penting bagi aku.
+Tentang Allah.
+Hana, aku tahu aku sendiri bukan manusia yang sempurna. Aku pun ada kekurangan, kesilapan dan dosa yang perlu aku perbaiki. Aku bukan menulis semua ni sebab aku rasa aku lebih baik daripada kau. Aku cuma berharap kita boleh sama-sama mengingatkan satu sama lain tentang perkara yang baik.
+Kadang-kadang, apabila kehidupan terasa terlalu berat, kita mungkin terlupa bahawa kita masih mempunyai tempat untuk mengadu.
+Kita mungkin mencari ketenangan di merata-rata tempat, tetapi terlupa untuk kembali kepada Allah.
+Aku nak kau ingat bahawa Allah mengetahui apa yang kau lalui, termasuk perkara yang tak mampu kau ceritakan kepada sesiapa pun. Dia mengetahui kesedihan yang kau sembunyikan dan perkara yang mungkin sukar untuk kau ungkapkan dengan kata-kata.
+Jadi, Hana, kalau suatu hari nanti kau rasa terlalu penat, jangan lupakan Allah.
+Mengadulah kepada-Nya. Berdoalah walaupun kau tak tahu ayat apa yang patut kau ucapkan. Dekatkanlah diri kepada-Nya walaupun kau rasa diri kau masih banyak kekurangan.
+Kau tak perlu menunggu sehingga kehidupan kau sempurna untuk kembali kepada Allah.
+Dan tolong ingat, dalam Islam, kita diajar untuk menjaga nyawa dan tubuh yang telah diamanahkan kepada kita. Jangan sengaja membahayakan diri sendiri. Jangan biarkan kesedihan membuatkan kau mengabaikan keselamatan kau.
+Aku bukan nak membuatkan kau berasa lebih bersalah tentang perkara yang pernah berlaku. Aku cuma berharap kau akan belajar untuk menjaga diri dengan lebih baik selepas ini.
+Kalau kau pernah melakukan kesilapan, masih ada ruang untuk memperbaiki diri. Kalau kau pernah melalui hari-hari yang sukar, masih ada peluang untuk membina hari-hari yang lebih baik.
+>Jangan berputus asa daripada rahmat Allah, Hana.
+Aku harap kau akan terus berusaha, walaupun perlahan-lahan.
+Aku harap kau akan belajar untuk memaafkan diri sendiri atas kesilapan yang pernah kau lakukan.
+Dan aku harap kau akan sedar bahawa kau masih layak mendapat ketenangan, kasih sayang, pertolongan dan peluang untuk menjadi lebih baik.
+Ada satu lagi perkara yang aku nak kau fikirkan.
+Tentang keselamatan kau.
+Bila kau bawa motor, aku harap kau akan lebih berhati-hati. Jangan biarkan emosi atau tekanan membuatkan kau mengambil risiko yang boleh membahayakan nyawa kau. Tak ada apa-apa yang perlu kau buktikan dengan mempertaruhkan keselamatan diri sendiri.
+Bila kau keluar malam seorang diri, aku harap kau akan mempertimbangkan keselamatan kau dan memastikan ada orang yang boleh membantu jika sesuatu berlaku.
+Dan apabila kau rasa tertekan sehingga terfikir untuk menyakiti diri sendiri, aku harap kau akan mencari seseorang yang boleh menemani kau dan membantu kau kekal selamat.
+Kalau ada perkara di rumah yang membuatkan kau tak selesa atau kau rasa tak selamat berada di sana, aku harap kau tak perlu menghadapinya seorang diri. Carilah orang dewasa yang kau percaya, seperti ahli keluarga yang boleh membantu, guru atau kaunselor.
+Aku tak tahu semua sebab di sebalik perkara yang kau lakukan, dan aku tak nak menghukum kau tanpa mengetahui cerita sebenar.
+Aku cuma nak kau mempunyai kehidupan yang lebih selamat.
+Hana, aku tak minta kau menjaga diri kerana aku semata-mata. Aku nak kau menjaga diri kerana kehidupan kau sendiri sangat berharga.
+Aku tak nak kau berubah hanya untuk menyenangkan hati aku. Aku nak kau mula menyedari bahawa diri kau juga layak mendapat penjagaan dan kasih sayang, termasuk daripada diri kau sendiri.
+Dan sejujurnya, aku tak tahu sama ada kau sedar atau tidak betapa aku berharap perkara-perkara baik akan berlaku dalam hidup kau.
+Aku harap kau akan menemui kebahagiaan yang tak memerlukan kau menyembunyikan kesedihan sendiri.
+Aku harap kau akan menemui ketenangan yang tak memerlukan kau membahayakan diri.
+Aku harap kau akan mempunyai seseorang yang boleh kau percayai apabila kau memerlukan tempat untuk bercerita.
+Aku harap kau akan belajar bahawa tak mengapa untuk meminta bantuan, tak mengapa untuk menangis, dan tak mengapa untuk mengakui bahawa ada hari yang terlalu sukar untuk kau hadapi seorang diri.
+Dan aku harap suatu hari nanti, apabila kau melihat kembali semua perkara yang pernah kau lalui, kau akan sedar bahawa kau telah memberikan diri kau peluang untuk terus melangkah ke hadapan.
+Aku tak tahu apa yang akan berlaku pada masa hadapan. Aku tak tahu sama ada aku akan sentiasa mempunyai jawapan apabila kau menghadapi masalah. Aku juga tak boleh menjanjikan bahawa aku akan sentiasa tahu cara terbaik untuk membantu kau.
+Tapi aku boleh berharap.
+Aku boleh mendoakan yang baik-baik untuk kau.
+Aku boleh mengingatkan kau apabila aku risau tentang keselamatan kau.
+Dan aku boleh cuba menjadi seorang kawan yang mendengar tanpa terus menghukum kau.
+>Sebab, Hana, aku tak nak kehilangan kau.
+Mungkin kita baru kenal selama beberapa minggu. Mungkin kau tak pernah menjangkakan bahawa seorang kawan yang baru hadir dalam hidup kau akan mengambil berat tentang keadaan kau.
+Tapi aku harap kau faham bahawa aku menulis semua ni bukan untuk membuatkan kau rasa bersalah. Aku tak nak kau rasa bahawa kau perlu bertanggungjawab terhadap perasaan aku atau perlu berpura-pura bahagia hanya untuk menenangkan aku.
+Aku cuma nak kau tahu bahawa ada seseorang yang benar-benar berharap kau akan menjaga diri.
+Aku tak nak suatu hari nanti aku hanya mampu berharap kau pernah mendengar nasihat aku. Aku nak melihat kau mendapat peluang untuk melalui hari-hari yang lebih baik, mencapai perkara yang kau impikan dan menjalani kehidupan dengan lebih tenang.
+Aku nak kau terus belajar, terus berkembang dan terus mencari perkara-perkara baik yang mungkin belum kau temui.
+Aku nak kau mempunyai masa depan yang boleh kau nantikan.
+Dan aku nak kau tahu bahawa walaupun aku tak mampu menyelesaikan semua masalah kau, aku tetap berharap kau tak akan berputus asa untuk mendapatkan pertolongan.
+Hana Halwah, terima kasih sebab hadir dalam hidup aku, walaupun kita baru mengenali satu sama lain.
+Aku harap persahabatan ni akan menjadi sesuatu yang baik untuk kita berdua. Aku harap kita boleh saling mengingatkan tentang perkara yang baik, saling mendoakan dan belajar menjadi manusia yang lebih baik.
+Aku tak mengharapkan kau menjadi sempurna.
+Aku cuma berharap kau akan lebih menghargai diri sendiri, lebih berhati-hati dalam setiap tindakan dan lebih terbuka untuk menerima pertolongan apabila kau memerlukannya.
+Aku harap kau akan sentiasa ingat bahawa Allah tidak pernah berhenti mengetahui apa yang sedang kau lalui. Dan aku harap kau akan terus berusaha mencari jalan yang lebih baik, walaupun perjalanan tu mungkin mengambil masa.
+Kalau suatu hari nanti kau rasa semuanya terlalu berat, aku harap kau tak membuat keputusan ketika emosi sedang menguasai diri. Berhentilah seketika, carilah seseorang yang boleh membantu dan berikan diri kau peluang untuk melalui saat itu dengan selamat.
+Kau tak perlu menyelesaikan seluruh kehidupan kau dalam satu hari.
+Kadang-kadang, cukup sekadar mengambil satu langkah kecil untuk menjaga diri sendiri.
+Dan Hana, kalau suatu hari nanti kau rasa macam tak ada sesiapa yang peduli tentang kau, aku harap kau akan ingat surat ni.
+Aku harap kau akan ingat bahawa ada seseorang yang risau apabila kau membahayakan diri sendiri.
+Ada seseorang yang berharap kau akan lebih berhati-hati apabila keluar seorang diri.
+Ada seseorang yang mahu kau terus mengingati Allah walaupun ketika kehidupan terasa sukar.
+Ada seseorang yang mendoakan agar kau diberikan ketenangan, kekuatan dan kebahagiaan.
+Ada seseorang yang mungkin tak mampu menghilangkan segala kesedihan kau, tetapi tetap berharap kau akan mendapatkan pertolongan yang kau perlukan.
+Ada seseorang yang mahu melihat kau tersenyum dengan ikhlas, bukan kerana kau terpaksa menyembunyikan apa yang sedang kau rasakan.
+Ada seseorang yang mahu kau sedar bahawa kau tak perlu melalui semuanya seorang diri.
+Dan kalau kau tertanya-tanya siapa orang itu…
+Siapa orang yang mengambil berat tentang keadaan kau?
+Siapa orang yang risau apabila kau melakukan sesuatu yang boleh membahayakan keselamatan kau?
+Siapa orang yang berharap kau akan lebih menyayangi diri sendiri?
+Siapa orang yang mahu kau terus mendekatkan diri kepada Allah dan tidak berputus asa terhadap kehidupan?
+Siapa orang yang berharap kau akan terus mempunyai peluang untuk merasai kebahagiaan pada hari-hari yang akan datang?
+Orang itu ialah aku.
+Aku, Mars.
+Aku mungkin tak mampu menjanjikan bahawa semuanya akan baik-baik sahaja. Aku mungkin tak mempunyai jawapan untuk setiap masalah yang kau hadapi. Tapi aku benar-benar berharap kau akan sentiasa mempunyai keberanian untuk meminta pertolongan, kekuatan untuk menghadapi hari-hari yang sukar dan harapan untuk terus melangkah ke hadapan.
+Aku nak kau terus menjaga diri, Hana. Aku nak kau memberikan peluang kepada diri sendiri untuk bahagia. Aku nak kau mengingati bahawa diri kau juga berhak mendapat ketenangan dan kehidupan yang lebih baik.
+Aku tak meminta kau berjanji bahawa kau takkan pernah bersedih lagi.
+Aku cuma berharap apabila kau bersedih, kau akan mencari pertolongan.
+Aku tak meminta kau berjanji bahawa kau takkan pernah menghadapi masalah lagi.
+Aku cuma berharap apabila masalah datang, kau tak akan menghadapinya seorang diri.
+Dan aku tak meminta kau berubah hanya kerana aku risau.
+>Aku cuma berharap kau akan mula melihat bahawa diri kau sendiri cukup berharga untuk dijaga.
+Tolong jaga diri baik-baik, Hana Halwah.
+Bukan untuk aku semata-mata, tetapi untuk diri kau sendiri, untuk masa depan kau dan untuk amanah yang Allah berikan kepada kau.
+Semoga Allah menjaga kau ketika aku tak ada di sisi kau. Semoga Allah memberikan ketenangan kepada hati kau ketika fikiran kau terasa terlalu berat. Semoga Allah mempermudahkan urusan kau, melindungi kau daripada perkara yang membahayakan diri dan membimbing kau ke arah kehidupan yang lebih baik.
+Aku harap suatu hari nanti, apabila kau membaca semula surat ni, kau akan tersenyum kerana kau telah memberikan diri kau peluang untuk melalui hari-hari yang lebih baik.
+Dan kalau pada suatu masa nanti kau terlupa bahawa ada seseorang yang mengambil berat tentang kau, bacalah semula surat ini.
+Ingatlah bahawa kau tak perlu menjadi sempurna untuk layak menerima pertolongan.
+Ingatlah bahawa kau tak perlu menyembunyikan kesedihan untuk kelihatan kuat.
+Dan ingatlah bahawa walaupun ada hari yang membuatkan kau sukar melihat kebaikan dalam kehidupan, kau masih berhak mendapatkan bantuan dan berharap pada hari esok.
+Ada seseorang yang peduli tentang kau.
+Ada seseorang yang risau tentang kau.
+Ada seseorang yang mendoakan kau.
+Ada seseorang yang berharap kau akan sentiasa selamat.
+Ada seseorang yang mahu melihat kau terus melangkah dan menemui perkara-perkara baik dalam kehidupan.
+Dan orang itu…
+Aku.
+^— Mars`;
+
+/* render letter */
+const bodyEl = document.getElementById('body');
+LETTER.split('\n').forEach(line => {
+  const p = document.createElement('p');
+  if (line.startsWith('>')) { p.className = 'hl'; p.textContent = line.slice(1); }
+  else if (line.startsWith('^')) { p.className = 'sign'; p.textContent = line.slice(1); }
+  else p.textContent = line;
+  bodyEl.appendChild(p);
+});
+
+/* floating decorations */
+const floaters = document.getElementById('floaters');
+const glyphs = ['✦','✧','♡','❀','·','✿'];
+for (let i = 0; i < 22; i++) {
+  const s = document.createElement('span');
+  s.className = 'float';
+  s.textContent = glyphs[i % glyphs.length];
+  s.style.left = (Math.random() * 100) + 'vw';
+  s.style.bottom = '-6vh';
+  s.style.fontSize = (12 + Math.random() * 22) + 'px';
+  s.style.animationDuration = (16 + Math.random() * 22) + 's';
+  s.style.animationDelay = (-Math.random() * 30) + 's';
+  floaters.appendChild(s);
+}
+
+/* reveal on scroll */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), { threshold: .15 });
+document.querySelectorAll('#body p').forEach(p => io.observe(p));
+
+/* progress bar */
+const bar = document.getElementById('progress');
+addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - innerHeight;
+  bar.style.width = (h > 0 ? scrollY / h * 100 : 0) + '%';
+}, { passive: true });
+
+/* music: same method as the Aufa letter (muted autoplay + YouTube iframe API, unmute on tap) */
+const musicBtn = document.getElementById('music');
+let ytPlayer = null, soundOn = false;
+const ytTag = document.createElement('script');
+ytTag.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(ytTag);
+window.onYouTubeIframeAPIReady = function(){
+  ytPlayer = new YT.Player('yt-player', {
+    events: { 'onReady': function(e){ e.target.playVideo(); } }
+  });
+};
+const ytFrame = document.getElementById('yt-player');
+function ytCmd(fn, args){
+  /* talks to the iframe directly, so it works even if the YouTube API script is blocked */
+  try { ytFrame.contentWindow.postMessage(JSON.stringify({event:'command', func:fn, args:args||[]}), '*'); } catch(e){}
+  try { if (ytPlayer && ytPlayer[fn]) ytPlayer[fn].apply(ytPlayer, args||[]); } catch(e){}
+}
+let fallbackShown = false;
+function showFallback(){
+  if (fallbackShown) return;
+  fallbackShown = true;
+  const a = document.createElement('a');
+  a.href = 'https://www.youtube.com/watch?v=7lrj5eSaf4g';
+  a.target = '_blank'; a.rel = 'noopener';
+  a.textContent = '♪ Kalau tak ada bunyi, tekan sini';
+  a.style.cssText = 'position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:46;background:rgba(255,255,255,.95);color:#5a3ea0;padding:10px 16px;border-radius:99px;font-weight:700;font-size:.85rem;text-decoration:none;box-shadow:0 8px 20px rgba(90,62,160,.3)';
+  document.body.appendChild(a);
+  setTimeout(() => a.remove(), 9000);
+}
+function setSound(on){
+  soundOn = on;
+  musicBtn.textContent = on ? '♪' : '🔇';
+  musicBtn.classList.toggle('playing', on);
+  musicBtn.classList.toggle('paused', !on);
+}
+function soundUp(){
+  ytCmd('unMute'); ytCmd('setVolume',[70]); ytCmd('playVideo');
+  setTimeout(() => { ytCmd('unMute'); ytCmd('playVideo'); }, 500);
+  setSound(true);
+  setTimeout(showFallback, 4000);
+}
+function toggleSound(){
+  if (!soundOn) soundUp();
+  else { ytCmd('mute'); setSound(false); }
+}
+function unmuteNow(){ if (!soundOn) soundUp(); }
+musicBtn.addEventListener('click', toggleSound);
+
+/* open the envelope */
+const env = document.getElementById('env');
+env.addEventListener('click', () => {
+  env.classList.add('open');
+  unmuteNow();
+  setTimeout(() => {
+    document.getElementById('intro').classList.add('gone');
+    document.body.classList.remove('locked');
+    document.body.classList.add('opened');
+    scrollTo(0, 0);
+  }, 1400);
+}, { once: true });
+</script>
+</body>
+</html>
